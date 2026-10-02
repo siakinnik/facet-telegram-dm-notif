@@ -123,6 +123,7 @@ std::vector<Entry> Inbox::entries(const Filters& f) const {
         e.title = c.title;
         e.unread = std::max(0, c.unread);
         e.date = c.has_last ? c.last.date : 0;
+        e.message_id = c.has_last ? c.last.id : 0;
         e.has_preview = c.has_last && c.last.incoming;
         e.preview = c.last.preview;
         e.hide_text = !(c.default_preview ? scope_show_preview_ : c.show_preview) || c.user_id == kServiceUserId;

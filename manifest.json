@@ -1,9 +1,14 @@
 {
   "id": "telegram-dm-notif",
   "name": { "en": "Telegram messages", "ru": "Сообщения Telegram" },
-  "version": "0.1.0-alpha",
-  "api": 2,
+  "version": "0.2.0-alpha",
+  "api": 3,
   "exec": "telegram-dm-notif",
-  "permissions": ["network"],
+  "permissions": [
+    "network",
+    "background",
+    { "name": "notifications", "optional": true,
+      "reason": { "en": "A notification when someone writes to you.", "ru": "Уведомление, когда вам пишут." } }
+  ],
   "tile": { "icon": "chat" }
 }

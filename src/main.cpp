@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <deque>
+#include <map>
 #include <memory>
 #include <string>
 #include <thread>
@@ -173,10 +174,44 @@ public:
     void refresh() {
         dirty_ = false;
         plugin_.set_tile(tile());
+        update_notifications();
         if (plugin_.visible()) plugin_.set_ui(build());
     }
 
 private:
+    // One system notification per chat with new messages (permission
+    // "notifications", optional), withdrawn once the chat is read anywhere;
+    // the tile badge shows the unread count. Messages that were already
+    // unread when we signed in are not announced again.
+    void update_notifications() {
+        bool ready = settings_.has_api() && auth_ == "authorizationStateReady";
+        auto list = ready ? entries() : std::vector<tg::Entry>();
+        int unread = 0;
+        for (const auto& e : list) unread += std::max(1, e.unread);
+        plugin_.set_badge(unread);
+        if (!plugin_.has_permission("notifications")) return;
+
+        std::map<int64_t, int64_t> still;
+        for (const auto& e : list) {
+            auto old = notified_.find(e.chat_id);
+            bool fresh = e.has_preview && e.date >= ready_since_ - 5 &&
+                         (old == notified_.end() || old->second != e.message_id);
+            if (fresh && !plugin_.visible()) {
+                facet::sdk::Notification n;
+                n.id = "chat:" + std::to_string(e.chat_id);
+                n.title = e.title;
+                n.body = preview_line(e);
+                if (e.unread > 1) n.body = tr("{} new · {}", {std::to_string(e.unread), n.body});
+                n.priority = "high";
+                plugin_.notify(n);
+            }
+            still[e.chat_id] = old != notified_.end() && !fresh ? old->second : e.message_id;
+        }
+        for (const auto& [chat, msg] : notified_)
+            if (!still.count(chat)) plugin_.cancel_notification("chat:" + std::to_string(chat));
+        notified_ = std::move(still);
+    }
+
     std::string tr(std::string_view key) const { return plugin_.tr(key); }
     std::string tr(std::string_view key, const std::vector<std::string>& args) const { return plugin_.tr(key, args); }
     std::string settings_path() const { return plugin_.data_dir() + "/settings.json"; }
@@ -319,6 +354,7 @@ private:
                 send_parameters();
             } else if (auth_ == "authorizationStateReady") {
                 code_input_.clear();
+                ready_since_ = int64_t(std::time(nullptr));
                 Json load = Json::object();
                 load["chat_list"]["@type"] = "chatListMain";
                 load["limit"] = 200;
@@ -558,6 +594,8 @@ private:
     Json auth_state_;
     bool params_sent_ = false, busy_ = false, phone_form_ = false, dirty_ = false, stopping_ = false;
     double signout_armed_ = 0;
+    int64_t ready_since_ = 0;              // unix time of the sign-in (or start)
+    std::map<int64_t, int64_t> notified_;  // chat -> last message id announced or known
     // Sign-in form values; the password is dropped as soon as it is sent.
     std::string api_id_input_, api_hash_input_, phone_input_, code_input_, password_input_;
 };

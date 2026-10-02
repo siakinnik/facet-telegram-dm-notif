@@ -22,6 +22,7 @@ const facet::i18n::Table& ru() {
         {"And {} more chats.", "И ещё чатов: {}."},
         {"You replied last", "Последним ответили вы"},
         {"New message", "Новое сообщение"},
+        {"{} new · {}", "Новых: {} · {}"},
         {"Photo", "Фото"},
         {"Video", "Видео"},
         {"GIF", "GIF"},

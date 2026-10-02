@@ -30,6 +30,7 @@ struct Entry {
     std::string title;
     int unread = 0;       // 0 for chats only marked as unread
     int64_t date = 0;     // unix time of the last message
+    int64_t message_id = 0;  // of the last message
     Preview preview;      // of the last message, if it is incoming
     bool has_preview = false;
     bool hide_text = false;  // Telegram hides previews for this chat, or a service chat

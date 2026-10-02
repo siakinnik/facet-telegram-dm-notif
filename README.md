@@ -21,6 +21,9 @@ official client library, linked statically. It is **read only**:
 - Telegram's per-chat "show preview" setting is respected, and texts from the
   Telegram service account (login codes) are never shown;
 - "Show message text" off shows only "Photo", "New message", ...
+- with the optional `notifications` permission each chat with new messages
+  gets a system notification (withdrawn when you read it anywhere); the tile
+  shows the unread count as a badge. Needs Facet 0.4 (API 3).
 
 The Telegram session lives in `/var/lib/facet/data/telegram-dm-notif/tdlib`. Anyone who
 can read that directory can use the session: keep the device's root account
