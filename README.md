@@ -100,3 +100,15 @@ src/main.cpp      plugin glue: sign-in flow, QR code, message list, tile
 src/i18n/         translations
 tests/            unit tests with TDLib-shaped updates
 ```
+
+## Licenses
+
+- This project: GPL-3.0 (LICENSE); its sources are this repository at each
+  release tag.
+- The release executables are static: glibc (LGPL-2.1-or-later), the GCC runtime, OpenSSL (Apache-2.0), zlib and TDLib (Boost Software License 1.0, text in `third-party-licenses/`) are built into them. Their
+  licenses are in every release archive under `licenses/` (the packages they
+  come from, with exact versions, in `licenses/STATIC`, and the full texts in
+  `licenses/common-licenses/`).
+- Every release has `facet-telegram-dm-notif-<version>-sources.tar` with the sources of all of
+  that, including TDLib at its pinned commit. GCC's runtime (libstdc++, libgcc) is under the GCC Runtime
+  Library Exception, which asks for no sources.

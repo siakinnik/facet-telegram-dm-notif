@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project(facet-telegram-dm-notif VERSION 0.2.0 LANGUAGES CXX)
+project(facet-telegram-dm-notif VERSION 0.2.1 LANGUAGES CXX)
 set(TG_VERSION_SUFFIX "alpha")  # pre-release tag; empty for final releases; keep manifest.json in sync
 
 set(CMAKE_CXX_STANDARD 17)

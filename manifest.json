@@ -1,7 +1,7 @@
 {
   "id": "telegram-dm-notif",
   "name": { "en": "Telegram messages", "ru": "Сообщения Telegram" },
-  "version": "0.2.0-alpha",
+  "version": "0.2.1-alpha",
   "api": 3,
   "exec": "telegram-dm-notif",
   "permissions": [

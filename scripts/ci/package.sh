@@ -17,6 +17,11 @@ for f in LICENSE README.md; do
     [[ -f "$root/$f" ]] && install -m644 "$root/$f" "$stage/$f"
 done
 
+# The executable is static: the licenses of what is built into it, the
+# packages they come from (licenses/STATIC) and the full license texts.
+bash "$root/scripts/ci/licenses.sh" "$stage" "${CXX:-g++}" libc.a libstdc++.a libgcc_eh.a libssl.a libcrypto.a libz.a
+# TDLib, built from source into it (TDLIB_COMMIT).
+cp "$root"/third-party-licenses/*.txt "$stage/licenses/"
 mkdir -p "$out"
 name="facet-telegram-dm-notif-$version-linux-$arch.tar.gz"
 tar -C "$(dirname "$stage")" -czf "$out/$name" telegram-dm-notif
